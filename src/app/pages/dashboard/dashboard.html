@@ -1,0 +1,140 @@
+<div class="dashboard-container">
+    <div class="header-section">
+        <h1>Dashboard</h1>
+        <p class="welcome-text">Welcome back, {{ (authService.currentUser$ | async)?.firstName }}</p>
+    </div>
+
+    @if (isLoading) {
+    <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading your dashboard...</p>
+    </div>
+    } @else {
+
+    <!-- SUBSCRIBER DASHBOARD -->
+    @if (isSubscriber) {
+    <div class="stats-grid">
+        <div class="stat-card blue">
+            <div class="icon">📚</div>
+            <div class="stat-info">
+                <h3>{{ boughtBooks.length }}</h3>
+                <p>Books Purchased</p>
+            </div>
+        </div>
+        <div class="stat-card green">
+            <div class="icon">👥</div>
+            <div class="stat-info">
+                <h3>{{ subscribedAuthors.length }}</h3>
+                <p>Active Subscriptions</p>
+            </div>
+        </div>
+        <div class="stat-card purple">
+            <div class="icon">⭐</div>
+            <div class="stat-info">
+                <h3>0</h3>
+                <p>Reviews Given</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>My Library</h2>
+            <a routerLink="/books" class="view-all">Browse More</a>
+        </div>
+        @if (boughtBooks.length > 0) {
+        <div class="books-grid">
+            @for (book of boughtBooks; track book.id) {
+            <app-book-card [book]="book"></app-book-card>
+            }
+        </div>
+        } @else {
+        <div class="empty-state">
+            <p>You haven't bought any books yet.</p>
+            <a routerLink="/books" class="btn btn-primary">Start Reading</a>
+        </div>
+        }
+    </section>
+
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>My Subscriptions</h2>
+            <a routerLink="/authors" class="view-all">Find Authors</a>
+        </div>
+        @if (subscribedAuthors.length > 0) {
+        <div class="authors-grid">
+            @for (author of subscribedAuthors; track author.id) {
+            <app-author-card [author]="author"></app-author-card>
+            }
+        </div>
+        } @else {
+        <div class="empty-state">
+            <p>You haven't subscribed to any authors yet.</p>
+            <a routerLink="/authors" class="btn btn-primary">Discover Authors</a>
+        </div>
+        }
+    </section>
+    }
+
+    <!-- AUTHOR DASHBOARD -->
+    @if (isAuthor) {
+    @if (currentAuthor) {
+    <div class="stats-grid">
+        <div class="stat-card green">
+            <div class="icon">💰</div>
+            <div class="stat-info">
+                <h3>\${{ totalEarnings.toFixed(1) }}</h3>
+                <p>Total Revenue</p>
+            </div>
+        </div>
+        <div class="stat-card blue">
+            <div class="icon">📖</div>
+            <div class="stat-info">
+                <h3>{{ totalSales }}</h3>
+                <p>Copies Sold</p>
+            </div>
+        </div>
+        <div class="stat-card purple">
+            <div class="icon">👥</div>
+            <div class="stat-info">
+                <h3>{{ currentAuthor.subscribersNumber }}</h3>
+                <p>Followers</p>
+            </div>
+        </div>
+        <div class="stat-card orange">
+            <div class="icon">✍️</div>
+            <div class="stat-info">
+                <h3>{{ authorBooks.length }}</h3>
+                <p>Titles Published</p>
+            </div>
+        </div>
+    </div>
+
+    <section class="dashboard-section">
+        <div class="section-header">
+            <h2>My Published Works</h2>
+            <button class="btn btn-primary btn-sm" routerLink="/books">Add New</button>
+        </div>
+        @if (authorBooks.length > 0) {
+        <div class="books-grid">
+            @for (book of authorBooks; track book.id) {
+            <app-book-card [book]="book"></app-book-card>
+            }
+        </div>
+        } @else {
+        <div class="empty-state">
+            <p>You haven't published any books yet.</p>
+        </div>
+        }
+    </section>
+
+    } @else {
+    <div class="empty-state">
+        <h2>Author Profile Not Found</h2>
+        <p>It seems you are registered as an author but don't have a profile yet.</p>
+        <!-- In real app, link to create profile -->
+    </div>
+    }
+    }
+    }
+</div>
